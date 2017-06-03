@@ -16,7 +16,8 @@
 
 class VixCalc{
 public:
-    double caculateSigma(const OrderBook& orderbook, const double& expTime, const double& RFRate);
+    // expTime time before
+    double caculateSigma(OrderBook& ob, const double& expTime, const double& rfRate);
     double caculateVIX(const double& nearSigma,const double& nearExpTime, const double& nearSetTime, const double& nextSigma,const double& nextExpTime, const double& nextSetTime, const double& d30Time, const double& d365Time );
     //virtual void caculate();
 };
