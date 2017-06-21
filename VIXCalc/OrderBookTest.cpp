@@ -17,6 +17,7 @@
 #include <string>
 
 #include "OrderBook.hpp"
+#include "VixCalc.hpp"
 
 class CSVRow
 {
@@ -63,7 +64,8 @@ std::istream& operator>>(std::istream& str, CSVRow& data)
 void OrderBookTest::test()
 {
     std::cout<<__PRETTY_FUNCTION__<<std::endl;
-    std::ifstream file("20170526.csv");
+    std::ifstream file("CBOE_Near.csv");
+    //std::ifstream file("20170526.csv");
     std::string line;
     if (!file.is_open()){
         std::cout << "Unable to open file"<<std::endl;
@@ -73,9 +75,12 @@ void OrderBookTest::test()
     OrderBook * ob = new OrderBook();
     while(file >> row)
     {
-        ob->addStrike(OptionType::BUY, new Strike(atof(row[2].c_str()),atof(row[0].c_str()),atof(row[1].c_str())),false);
-        ob->addStrike(OptionType::SELL, new Strike(atof(row[2].c_str()),atof(row[3].c_str()),atof(row[4].c_str())),false);
+        ob->updateStrike(OptionType::BUY, new StrikeNode(atof(row[2].c_str()),atof(row[0].c_str()),atof(row[1].c_str())));
+        ob->updateStrike(OptionType::SELL, new StrikeNode(atof(row[2].c_str()),atof(row[3].c_str()),atof(row[4].c_str())));
     }
     ob->dump();
     file.close();
+    double exptime =0.0683486;
+    double rfrate = 0.000305;
+    VixCalc::caculateSigma(*ob, exptime, rfrate);
 }

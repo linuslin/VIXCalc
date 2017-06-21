@@ -15,15 +15,15 @@
 #include <iostream>
 
 // Note: -1 => None price
-struct Strike {
+struct StrikeNode {
     double m_price; //   e.g. 9000
     double m_bid;   //   e.g. 100
     double m_ask;   //   e.g. 101
-    Strike(double price=-1, double bid=-1, double ask=-1):
+    StrikeNode(double price=-1, double bid=-1, double ask=-1):
     m_price(price),m_bid(bid),m_ask(ask){}
 };
-
-
+//typedef std::map<double,Strike*> StrikeMap;
+//typedef std::pair<double,Strike*> StrikePair;
 struct OptionType{
     enum Type{
         BUY =0,
@@ -31,16 +31,24 @@ struct OptionType{
     };
 };
 
+struct Strike{
+    double m_price; //   e.g. 9000
+    StrikeNode * m_buy;
+    StrikeNode * m_sell;
+    Strike(double price);
+    Strike(OptionType::Type type, StrikeNode * strikeNode);
+    ~Strike();
+};
+typedef std::map<double,Strike*> OrderMap;
+typedef std::pair<double,Strike*> OrderPair;
 
-typedef std::map<double,Strike*> ordermap;
-typedef std::pair<double,Strike*> orderpair;
 struct OrderBook{
-    ordermap m_buy;
-    ordermap m_sell;
+    OrderMap m_orderbook;
+    OrderBook();
     ~OrderBook();
     
     // addStrike // if strike exist then update it
-    void addStrike(OptionType::Type type, Strike* strike,bool update);
+    void updateStrike(OptionType::Type type, StrikeNode* strikeNode);
     //void updateStrike(OptionType::Type type, Strike* strike);
     
     void dump();
