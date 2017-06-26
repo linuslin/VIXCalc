@@ -16,27 +16,27 @@ void OrderBook::updateStrike(OptionType::Type type, StrikeNode *strikeNode){
             if(strikeNode->m_price>0){
                 //OptionType* option;
                 //std::cout<<"OptionType="<<type<<std::endl;
-                //if(type==OptionType::BUY){
-                //    option=&(this->m_buy);
-                //}else if(type==OptionType::SELL){
-                //    option=&(this->m_sell);
+                //if(type==OptionType::CALL){
+                //    option=&(this->m_call);
+                //}else if(type==OptionType::PUT){
+                //    option=&(this->m_put);
                 //}else{
-                //    std::cerr<<"OptionType neither BUY nor SELL"<<std::endl;
+                //    std::cerr<<"OptionType neither CALL nor PUT"<<std::endl;
                 //    return;
                 //}
                 OrderMap::iterator it = this->m_orderbook.find(strikeNode->m_price);
                 if (it != m_orderbook.end()){
                     // already has value ...
-                        if(type==OptionType::BUY){
-                            if(it->second->m_buy){
-                                delete it->second->m_buy;
+                        if(type==OptionType::CALL){
+                            if(it->second->m_call){
+                                delete it->second->m_call;
                             }
-                            it->second->m_buy=strikeNode;
-                        }else if(type==OptionType::SELL){
-                            if(it->second->m_sell){
-                                delete it->second->m_sell;
+                            it->second->m_call=strikeNode;
+                        }else if(type==OptionType::PUT){
+                            if(it->second->m_put){
+                                delete it->second->m_put;
                             }
-                            it->second->m_sell=strikeNode;
+                            it->second->m_put=strikeNode;
                         }
                 }else{
                     // not found insert it
@@ -57,18 +57,18 @@ void OrderBook::updateStrike(OptionType::Type type, StrikeNode *strikeNode){
 
 void OrderBook::dump(){
     std::cout<<__PRETTY_FUNCTION__<<std::endl;
-    std::cout<<"--------    BUY     --------"<<std::endl;
+    std::cout<<"--------    CALL     --------"<<std::endl;
     
     OrderMap::iterator it = this->m_orderbook.begin();
     for (; it!=this->m_orderbook.end(); ++it){
-        std::cout << it->first <<"\t"<< it->second->m_buy->m_bid << '\t' << it->second->m_buy->m_ask<<std::endl;
+        std::cout << it->first <<"\t"<< it->second->m_call->m_bid << '\t' << it->second->m_call->m_ask<<std::endl;
         
     }
     
-    std::cout<<"--------    SELL    --------"<<std::endl;
+    std::cout<<"--------    PUT    --------"<<std::endl;
     it = this->m_orderbook.begin();
     for (; it!=this->m_orderbook.end(); ++it){
-        std::cout << it->first <<"\t"<< it->second->m_sell->m_bid << '\t' << it->second->m_sell->m_ask<<std::endl;
+        std::cout << it->first <<"\t"<< it->second->m_put->m_bid << '\t' << it->second->m_put->m_ask<<std::endl;
     }
 }
 
@@ -86,17 +86,17 @@ OrderBook::~OrderBook(){
 
 
 Strike::Strike(double price):m_price(price){
-    m_buy = new StrikeNode(price,0,0);
-    m_sell = new StrikeNode(price,0,0);
+    m_call = new StrikeNode(price,0,0);
+    m_put = new StrikeNode(price,0,0);
 }
 
 Strike::Strike(OptionType::Type type, StrikeNode * strikeNode){
-    if (type == OptionType::BUY){
-        m_buy = strikeNode;
-        m_sell = new StrikeNode(strikeNode->m_price);
-    }else if(type == OptionType::SELL){
-        m_sell = strikeNode;
-        m_buy = new StrikeNode(strikeNode->m_price);
+    if (type == OptionType::CALL){
+        m_call = strikeNode;
+        m_put = new StrikeNode(strikeNode->m_price);
+    }else if(type == OptionType::PUT){
+        m_put = strikeNode;
+        m_call = new StrikeNode(strikeNode->m_price);
     }else{
         std::cerr<< "this should not be happened"<<std::endl;
     }
@@ -104,10 +104,10 @@ Strike::Strike(OptionType::Type type, StrikeNode * strikeNode){
 }
 
 Strike::~Strike(){
-    if (m_buy) {
-        delete m_buy;
+    if (m_call) {
+        delete m_call;
     }
-    if (m_sell) {
-        delete m_sell;
+    if (m_put) {
+        delete m_put;
     }
 }

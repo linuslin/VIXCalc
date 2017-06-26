@@ -26,15 +26,15 @@ struct StrikeNode {
 //typedef std::pair<double,Strike*> StrikePair;
 struct OptionType{
     enum Type{
-        BUY =0,
-        SELL =1,
+        CALL =0,
+        PUT =1,
     };
 };
 
 struct Strike{
     double m_price; //   e.g. 9000
-    StrikeNode * m_buy;
-    StrikeNode * m_sell;
+    StrikeNode * m_call;
+    StrikeNode * m_put;
     Strike(double price);
     Strike(OptionType::Type type, StrikeNode * strikeNode);
     ~Strike();

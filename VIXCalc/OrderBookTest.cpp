@@ -75,8 +75,8 @@ void OrderBookTest::test()
     OrderBook * ob = new OrderBook();
     while(file >> row)
     {
-        ob->updateStrike(OptionType::BUY, new StrikeNode(atof(row[2].c_str()),atof(row[0].c_str()),atof(row[1].c_str())));
-        ob->updateStrike(OptionType::SELL, new StrikeNode(atof(row[2].c_str()),atof(row[3].c_str()),atof(row[4].c_str())));
+        ob->updateStrike(OptionType::CALL, new StrikeNode(atof(row[2].c_str()),atof(row[0].c_str()),atof(row[1].c_str())));
+        ob->updateStrike(OptionType::PUT, new StrikeNode(atof(row[2].c_str()),atof(row[3].c_str()),atof(row[4].c_str())));
     }
     ob->dump();
     file.close();
